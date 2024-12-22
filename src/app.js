@@ -6,8 +6,12 @@ const authRoutes = require('./routes/authRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const setupSwagger = require('./swagger');
+const http = require('http');
 
-dotenv.config();
+// Load environment variables in non-production environments
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +30,8 @@ app.use('/api/profile', profileRoutes);
 
 setupSwagger(app);
 
-app.listen(PORT, HOST, () => {
+const server = http.createServer(app);
+
+server.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
